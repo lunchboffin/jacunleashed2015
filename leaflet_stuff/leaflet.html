@@ -22,6 +22,14 @@
 	<link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
     <style>
 
+		.mute{
+			position:fixed;
+			bottom:10px;
+			left:10px;
+			width:64px;
+			height:64px;
+		}
+	
 		.splash {
 			position: absolute;
 			top: 50%;
@@ -95,6 +103,10 @@
 	  }
     </style>
     <script>
+	
+		var audio = new Audio('ViceroyTeaWaltz3.mp3');
+		audio.play();
+	
       function UpdateScore()
       {
       $('#Score').text(FoundShips.length+" of "+Ships.features.length);
@@ -347,6 +359,10 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 		Yaarrr Regards,<br /><div style="height:8px;"></div>
 		<span style="font-family:'Pacifico', cursive;">The Cap'n</span>
 		<div style="position:relative;top:9px;font-family:sans-serif;font-size:.8em;color:#D2B48C;text-align:center;width:100%;">(click to close)</div>
+	</div>
+	<div class="mute">
+		<img class="audio_mute" src="mute.png" alt="mute" onclick="audio.pause();$('.audio_play').show();$('.audio_mute').hide();" />
+		<img class="audio_play" src="audio.png" alt="audio" onclick="audio.play();$('.audio_mute').show();$('.audio_play').hide();" />
 	</div>
   </body>
 </html>
