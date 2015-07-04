@@ -222,8 +222,22 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 	  PirateMapLayers.addTo(map);
 
 
-      var TreasureIcon = L.icon({
-      iconUrl: 'wreck.png',
+      var TreasureIcon1 = L.icon({
+      iconUrl: 'shipwreck01.gif',
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+      });
+	  
+	  var TreasureIcon2 = L.icon({
+      iconUrl: 'shipwreck02.gif',
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+      });
+	  
+	  var TreasureIcon3 = L.icon({
+      iconUrl: 'shipwreck03.gif',
       iconSize: [32, 37],
       iconAnchor: [16, 37],
       popupAnchor: [0, -28]
@@ -300,7 +314,13 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       }
 
 
-
+	  /**
+		 * Returns a random integer between min (inclusive) and max (inclusive)
+		 * Using Math.round() will give you a non-uniform distribution!
+		 */
+		function getRandomInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
 
 
       var HistoricLayer = L.geoJson(HistoricPlaces, {
@@ -315,7 +335,14 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       var ShipsLayer = L.geoJson(Ships, {
 
       pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {icon: TreasureIcon});
+		switch(getRandomInt(0,2)){
+			case 0:
+				return L.marker(latlng, {icon: TreasureIcon1});
+			case 1:
+				return L.marker(latlng, {icon: TreasureIcon2});
+			case 2:
+				return L.marker(latlng, {icon: TreasureIcon3});
+		}
       },
 
       onEachFeature: onEachShipWreck
