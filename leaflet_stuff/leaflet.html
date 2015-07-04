@@ -16,19 +16,51 @@
     <script src="paepointsofinterest.geojson" type="text/javascript"></script>
     <script src="shipwrecks.geojson" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
     <style>
 
-
+		.splash {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			height:320px;
+			width:220px;
+			background-color:#fffff0;
+			z-index:9999;
+			font-family: 'Gloria Hallelujah', cursive;
+			font-size:.9em;
+			padding:15px 10px 10px 10px;
+			cursor:default;
+			
+			/* paper curl */
+				-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+				-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+		}
+	
       .info
       {
-      padding: 6px 8px;
+      /*padding: 6px 8px;
       font: 14px/16px Arial, Helvetica, sans-serif;
       background: white;
       background: rgba(255,255,255,0.8);
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      border-radius: 5px;
+      border-radius: 5px;*/
+	  
+			background-color:#fffff0;
+			padding: 6px 8px;
+			cursor:default;
+			
+			border-radius: 4px;
+			
+			/* paper curl */
+			-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+			-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
       }
       .info h4 {
       margin: 0 0 5px;
@@ -47,6 +79,16 @@
       margin-right: 8px;
       opacity: 0.7;
       }
+	  
+	  .leaflet-popup-content-wrapper{
+		background-color:#fffff0;
+			cursor:default;
+			border-radius: 4px;
+			/* paper curl */
+			-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+			-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+	  }
     </style>
     <script>
       function UpdateScore()
@@ -133,10 +175,8 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 	  OpenSeaMap.addTo(map);
 	  Stamen_TonerHybrid.addTo(map);
 
-
-
       var TreasureIcon = L.icon({
-      iconUrl: 'treasure.png',
+      iconUrl: 'wreck.png',
       iconSize: [32, 37],
       iconAnchor: [16, 37],
       popupAnchor: [0, -28]
@@ -156,26 +196,27 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       popupAnchor: [0, -28]
       });
 
-
       function onHistoricFeature(feature, layer) {
-      var popupContent = "<h1>"+feature.properties.TITLE+"</h1><p>"+feature.properties.DESCRIPTION+"</p><a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
+      var popupContent = 
+		"<h1>"+feature.properties.TITLE+"</h1>"+
+		"<p>"+feature.properties.DESCRIPTION+"</p>"+
+		"<a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
 
       if (feature.properties && feature.properties.popupContent) {
-      popupContent += feature.properties.popupContent;
+		popupContent += feature.properties.popupContent;
       }
-
-      layer.bindPopup(popupContent);
+		layer.bindPopup(popupContent);
       }
 
       function onPAE(feature, layer) {
       var popupContent = "<h1>"+feature.properties.Name+"</h1>";
       if(feature.properties.Web_URL !== undefined)
       {
-      popupContent += "<a href='"+feature.properties.Web_URL+"' target=_blank>More Info</a>";
+		popupContent += "<a href='"+feature.properties.Web_URL+"' target=_blank>More Info</a>";
       }
 
       if (feature.properties && feature.properties.popupContent) {
-      popupContent += feature.properties.popupContent;
+		popupContent += feature.properties.popupContent;
       }
 
       layer.bindPopup(popupContent);
@@ -183,75 +224,75 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       
       function foundFeature(e)
       {
-      if($.inArray(e.target._leaflet_id,FoundShips)!=-1)
-      {
-      }
-      else
-      {
-      FoundShips.push(e.target._leaflet_id);
-      }
-      UpdateScore();
+		  if($.inArray(e.target._leaflet_id,FoundShips)!=-1)
+		  {
+		  }
+		  else
+		  {
+			FoundShips.push(e.target._leaflet_id);
+		  }
+		  UpdateScore();
       }
 
       function onEachShipWreck(feature, layer) {
-      var popupContent = "<h1>"+feature.properties.WRECKNAME+"</h1><p>Rigging: "+feature.properties.RIGDESC+", Hull: "+feature.properties.HULLDESC+"<br/>Lost at "+feature.properties.LOSSLOCATI+" on "+feature.properties.LOSSDATE+" cause: "+feature.properties.LOSSCAUSE+"</p><a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
+      var popupContent = 
+		"<h1>"+feature.properties.WRECKNAME+"</h1>"+
+		"<p>Rigging: "+feature.properties.RIGDESC+", Hull: "+feature.properties.HULLDESC+
+		"<br/>"+
+		"Lost at "+feature.properties.LOSSLOCATI+" on "+feature.properties.LOSSDATE+" cause: "+feature.properties.LOSSCAUSE+"</p>"+
+		"<a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
 
       if (feature.properties && feature.properties.popupContent) {
-      popupContent += feature.properties.popupContent;
+		popupContent += feature.properties.popupContent;
       }
 
       layer.bindPopup(popupContent);
-      layer.on({
-      click: foundFeature
-      });
+		  layer.on({
+			click: foundFeature
+		  });
       }
 
-      
-
-
-
       var coorsLayer = L.geoJson(HistoricPlaces, {
-
-      pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {icon: baseballIcon});
-      },
-
-      onEachFeature: onHistoricFeature
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: baseballIcon});
+		},
+		onEachFeature: onHistoricFeature
       }).addTo(map);
 
       var coorsLayer = L.geoJson(Ships, {
-
-      pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {icon: TreasureIcon});
-      },
-
-      onEachFeature: onEachShipWreck
+		  pointToLayer: function (feature, latlng) {
+		  return L.marker(latlng, {icon: TreasureIcon});
+		  },
+		  onEachFeature: onEachShipWreck
       }).addTo(map);
 
       var coorsLayer = L.geoJson(PAEPoI, {
-
-      pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {icon: AnchorIcon});
-      },
-
-      onEachFeature: onPAE
+		  pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: AnchorIcon});
+		  },
+		  onEachFeature: onPAE
       }).addTo(map);
 
       var info = L.control();
       function CalcCheats(element)
       {
-      element.checked ? map.options.minZoom=0:map.options.minZoom=17;
-      if(!element.checked)
-      {
-      map.setZoom(map.options.minZoom);
-      }
+		  element.checked ? map.options.minZoom=0:map.options.minZoom=17;
+		  if(!element.checked)
+		  {
+			map.setZoom(map.options.minZoom);
+		  }
       }
 
       info.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-      this._div.innerHTML = '<input type=checkbox id=cheatcheck onchange="CalcCheats(this)" /><label for=cheatcheck>CHEATS</label><div>Score: <span id="Score"></span></div>';
-      this.update();
-      return this._div;
+		  this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+		  this._div.innerHTML = 
+		  '<button style="margin-bottom:4px;" onclick="$(\'.splash\').show();">Instructions</button><br />'+
+		  '<div>Score: <span id="Score"></span></div>'+
+		  '<input type=checkbox id=cheatcheck onchange="CalcCheats(this)" /><label for=cheatcheck>CHEATS</label>';
+		  this._div.class = 'scorebox';
+		  this.update();
+		  
+		  return this._div;
       };
 
       // method that we will use to update the control based on feature properties passed
@@ -266,14 +307,21 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 
       function ResizeWindow()
       {
-      $("#map").width($(window).width()-20).height($(window).height()-20);
-      map.invalidateSize();
+		$("#map").width($(window).width()-20).height($(window).height()-20);
+		map.invalidateSize();
       }
       ResizeWindow();
-
 
       UpdateScore();
       
     </script>
+	<div class="splash" onclick="$('.splash').hide();">
+		Ahoy mateys,<br /><div style="height:8px;"></div>
+		It's Captain Chubberknuckles here. I have a crackerjack quest for ye to perform:<br /><div style="height:8px;"></div>
+		Please find all of the sunken ships in South Australia, for booty!<br /><div style="height:16px;"></div>
+		Yaarrr Regards,<br /><div style="height:8px;"></div>
+		<span style="font-family:'Pacifico', cursive;">The Cap'n</span>
+		<div style="position:relative;top:9px;font-family:sans-serif;font-size:.8em;color:#D2B48C;text-align:center;width:100%;">(click to close)</div>
+	</div>
   </body>
 </html>
