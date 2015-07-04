@@ -34,7 +34,7 @@ var heroImage = new Image();
 heroImage.onload = function () {
 	heroReady = true;
 };
-heroImage.src = "img/download.png";
+heroImage.src = "img/hero.gif";
 
 // target image
 var targetReady = false;
@@ -42,7 +42,7 @@ var targetImage = new Image();
 targetImage.onload = function () {
 	targetReady = true;
 };
-targetImage.src = "img/target.png";
+targetImage.src = "img/target.gif";
 
 // Game objects
 var hero = {
