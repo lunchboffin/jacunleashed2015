@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Leaflet GeoJSON Example</title>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+
+
+  </head>
+  <body>
+    <div id="map" style="width: 1900px; height: 900px"></div>
+
+    <script src="historic_places.geojson" type="text/javascript"></script>
+    <script src="paepointsofinterest.geojson" type="text/javascript"></script>
+    <script src="shipwrecks.geojson" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <style>
+
+
+      .info
+      {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+      }
+      .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+      }
+
+      .legend {
+      text-align: left;
+      line-height: 18px;
+      color: #555;
+      }
+      .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+      }
+    </style>
+    <script>
+      function UpdateScore()
+      {
+      $('#Score').text(FoundShips.length+" of "+Ships.features.length);
+      }
+      var FoundShips=[];
+      var map = L.map('map').setView([  -35.11717100000, 137.49110200000], 17);
+      map.options.minZoom=17;
+      
+
+      L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="httpx://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      id: 'examples.map-20v6611k'
+      }).addTo(map);
+
+            /*var MapQuestOpen_Aerial = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
+	type: 'sat',
+	ext: 'jpg',
+	attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency',
+	subdomains: '1234'
+      });
+
+      MapQuestOpen_Aerial.addTo(map);
+
+      var Esri_NatGeoWorldMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+	maxZoom: 16
+      });
+
+      Esri_NatGeoWorldMap.addTo(map);
+
+      var Stamen_Watercolor = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	subdomains: 'abcd',
+	minZoom: 1,
+	maxZoom: 16,
+	ext: 'png'
+      });
+var HERE_satelliteDay = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/satellite.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
+	attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+	subdomains: '1234',
+	mapID: 'newest',
+	app_id: '<your app_id>',
+	app_code: '<your app_code>',
+	base: 'aerial',
+	maxZoom: 20
+});
+      
+            Stamen_Watercolor.addTo(map);
+	  HERE_satelliteDay.addTo(map);
+
+	  var NASAGIBS_ViirsEarthAtNight2012 = L.tileLayer('http://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}', {
+	attribution: 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+	bounds: [[-85.0511287776, -179.999999975], [85.0511287776, 179.999999975]],
+	minZoom: 1,
+	maxZoom: 8,
+	format: 'jpg',
+	time: '',
+	tilematrixset: 'GoogleMapsCompatible_Level'
+	  });
+	  NASAGIBS_ViirsEarthAtNight2012.addTo(map);*/
+
+var OpenStreetMap_HOT = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+});
+var OpenSeaMap = L.tileLayer('http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
+	attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors'
+});
+// https: also suppported.
+var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 20,
+	ext: 'png'
+	  });
+
+	  OpenStreetMap_HOT.addTo(map);
+	  OpenSeaMap.addTo(map);
+	  Stamen_TonerHybrid.addTo(map);
+
+
+
+      var TreasureIcon = L.icon({
+      iconUrl: 'treasure.png',
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+      });
+
+      var AnchorIcon = L.icon({
+      iconUrl: 'anchor.png',
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+      });
+
+      var baseballIcon = L.icon({
+      iconUrl: 'baseball.png',
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+      });
+
+
+      function onHistoricFeature(feature, layer) {
+      var popupContent = "<h1>"+feature.properties.TITLE+"</h1><p>"+feature.properties.DESCRIPTION+"</p><a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
+
+      if (feature.properties && feature.properties.popupContent) {
+      popupContent += feature.properties.popupContent;
+      }
+
+      layer.bindPopup(popupContent);
+      }
+
+      function onPAE(feature, layer) {
+      var popupContent = "<h1>"+feature.properties.Name+"</h1>";
+      if(feature.properties.Web_URL !== undefined)
+      {
+      popupContent += "<a href='"+feature.properties.Web_URL+"' target=_blank>More Info</a>";
+      }
+
+      if (feature.properties && feature.properties.popupContent) {
+      popupContent += feature.properties.popupContent;
+      }
+
+      layer.bindPopup(popupContent);
+      }
+      
+      function foundFeature(e)
+      {
+      if($.inArray(e.target._leaflet_id,FoundShips)!=-1)
+      {
+      }
+      else
+      {
+      FoundShips.push(e.target._leaflet_id);
+      }
+      UpdateScore();
+      }
+
+      function onEachShipWreck(feature, layer) {
+      var popupContent = "<h1>"+feature.properties.WRECKNAME+"</h1><p>Rigging: "+feature.properties.RIGDESC+", Hull: "+feature.properties.HULLDESC+"<br/>Lost at "+feature.properties.LOSSLOCATI+" on "+feature.properties.LOSSDATE+" cause: "+feature.properties.LOSSCAUSE+"</p><a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
+
+      if (feature.properties && feature.properties.popupContent) {
+      popupContent += feature.properties.popupContent;
+      }
+
+      layer.bindPopup(popupContent);
+      layer.on({
+      click: foundFeature
+      });
+      }
+
+      
+
+
+
+      var coorsLayer = L.geoJson(HistoricPlaces, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: baseballIcon});
+      },
+
+      onEachFeature: onHistoricFeature
+      }).addTo(map);
+
+      var coorsLayer = L.geoJson(Ships, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: TreasureIcon});
+      },
+
+      onEachFeature: onEachShipWreck
+      }).addTo(map);
+
+      var coorsLayer = L.geoJson(PAEPoI, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: AnchorIcon});
+      },
+
+      onEachFeature: onPAE
+      }).addTo(map);
+
+      var info = L.control();
+      function CalcCheats(element)
+      {
+      element.checked ? map.options.minZoom=0:map.options.minZoom=17;
+      if(!element.checked)
+      {
+      map.setZoom(map.options.minZoom);
+      }
+      }
+
+      info.onAdd = function (map) {
+      this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+      this._div.innerHTML = '<input type=checkbox id=cheatcheck onchange="CalcCheats(this)" /><label for=cheatcheck>CHEATS</label><div>Score: <span id="Score"></span></div>';
+      this.update();
+      return this._div;
+      };
+
+      // method that we will use to update the control based on feature properties passed
+      info.update = function (props) {
+      
+      };
+
+      info.addTo(map);
+      $( window ).resize(function() {
+      ResizeWindow();
+      });
+
+      function ResizeWindow()
+      {
+      $("#map").width($(window).width()-20).height($(window).height()-20);
+      map.invalidateSize();
+      }
+      ResizeWindow();
+
+
+      UpdateScore();
+      
+    </script>
+  </body>
+</html>
