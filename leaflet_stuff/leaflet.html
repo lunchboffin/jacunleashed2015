@@ -89,6 +89,10 @@
 			-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 	  }
+	  
+	  .leaflet-control-zoom{
+		display:none;
+	  }
     </style>
     <script>
       function UpdateScore()
@@ -296,9 +300,11 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       function CalcCheats(element)
       {
 		  element.checked ? map.options.minZoom=0:map.options.minZoom=17;
+		  $(".leaflet-control-zoom").show();
 		  if(!element.checked)
 		  {
 			map.setZoom(map.options.minZoom);
+			$(".leaflet-control-zoom").hide();
 		  }
       }
 
