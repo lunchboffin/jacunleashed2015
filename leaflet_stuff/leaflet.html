@@ -20,8 +20,17 @@
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
-    <style>
+	<script src="leaflet-knn.min.js"></script>
 
+	  <img src="duck_front.gif" id=player_image />
+    <style>
+#player_image{
+    position: absolute;
+    height: 32px;
+    width: 32px;
+    top:calc(50% - 32px/2); /* height divided by 2*/
+    left:calc(50% - 32px/2); /* width divided by 2*/
+}
 		.splash {
 			position: absolute;
 			top: 50%;
@@ -193,11 +202,14 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 	  var access_token='pk.eyJ1IjoiY3NqYWMiLCJhIjoiYjE2MzdhMzE3YzllZjJlZTI2YWE5YWZiNzRiNWE3YmMifQ.Q5u523dQ-tkBuaIHmVl9yg';
 	 
 
-	    L.tileLayer( 'http://api.tiles.mapbox.com/v4/'+mapid+'/{z}/{x}/{y}.png?access_token='+access_token, {
+	    var PirateMapLayers = L.tileLayer( 'http://api.tiles.mapbox.com/v4/'+mapid+'/{z}/{x}/{y}.png?access_token='+access_token, {
       maxZoom: 17,
       attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       id: 'examples.map-20v6611k'
-	  }).addTo(map);
+	  });
+	  PirateMapLayers.addTo(map);
+
+
       var TreasureIcon = L.icon({
       iconUrl: 'wreck.png',
       iconSize: [32, 37],
@@ -275,25 +287,35 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 		  });
       }
 
-      var coorsLayer = L.geoJson(HistoricPlaces, {
-		pointToLayer: function (feature, latlng) {
-			return L.marker(latlng, {icon: baseballIcon});
-		},
-		onEachFeature: onHistoricFeature
+
+
+
+
+      var HistoricLayer = L.geoJson(HistoricPlaces, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: baseballIcon});
+      },
+
+      onEachFeature: onHistoricFeature
       }).addTo(map);
 
-      var coorsLayer = L.geoJson(Ships, {
-		  pointToLayer: function (feature, latlng) {
-		  return L.marker(latlng, {icon: TreasureIcon});
-		  },
-		  onEachFeature: onEachShipWreck
+      var ShipsLayer = L.geoJson(Ships, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: TreasureIcon});
+      },
+
+      onEachFeature: onEachShipWreck
       }).addTo(map);
 
-      var coorsLayer = L.geoJson(PAEPoI, {
-		  pointToLayer: function (feature, latlng) {
-			return L.marker(latlng, {icon: AnchorIcon});
-		  },
-		  onEachFeature: onPAE
+      var PAELayer = L.geoJson(PAEPoI, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: AnchorIcon});
+      },
+
+      onEachFeature: onPAE
       }).addTo(map);
 
       var info = L.control();
@@ -333,11 +355,32 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       function ResizeWindow()
       {
 		$("#map").width($(window).width()-20).height($(window).height()-20);
-		map.invalidateSize();
+	  map.invalidateSize();
+	 
       }
       ResizeWindow();
 
+
       UpdateScore();
+
+	  function RenderRadar()
+	  {
+	  var nextship=leafletKnn(ShipsLayer).nearest(map.getCenter(),1, 5000);
+	  var dirlat = nextship[0].lat - map.getCenter().lat;
+	  var dirlan = nextship[0].lon - map.getCenter().lng;
+	  var len = Math.sqrt(dirlat*dirlat+dirlan*dirlan);
+	  dirlat /= len;
+	  dirlan /= len;
+	  dirlat *= 0.001;
+	  dirlan *= 0.001;
+	  var cntr=  map.getCenter();
+	  var arrowpoint = new L.LatLng(cntr.lat+ dirlat, cntr.lng+dirlan);
+	  
+	  
+	  var latlngs = [arrowpoint,map.getCenter()];
+	  var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+	  };
+	  RenderRadar();
       
     </script>
 	<div class="splash" onclick="$('.splash').hide();">
