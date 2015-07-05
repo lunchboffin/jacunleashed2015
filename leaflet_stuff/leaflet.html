@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sid Meier's SA Treasure Hunter by Tom Clancy 2015 v1.0 PRE-RELEASE ALPHA EARLY ACCESS EXCLUSIVE DLC SEASON PASS</title>
+    <title>SA Treasure Hunter 2015 v1.0 PRE-RELEASE ALPHA EARLY ACCESS EXCLUSIVE DLC SEASON PASS</title>
     <meta charset="utf-8" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -152,7 +152,7 @@
 		var FoundShips=[];
 		 
 	  
-		var map = L.map('map').setView([   -34.81148900000,138.52926600000], 17);
+		var map = L.map('map').setView([-34.97436195199761, 138.50608706474304], 17);
 		map.on('move', function(e){RenderRadar()});
       map.options.minZoom=17;
       
@@ -339,6 +339,18 @@ RenderRadar();
 	  {
 	  	  $('#compass').hide();
 	  }
+		}
+
+		 function CalcMinimapDisp(element)
+      {
+	  if(element.checked)
+	  {
+	  $('#minimap').show();
+	  }
+	  else
+	  {
+	  	  $('#minimap').hide();
+	  }
       }
 
       info.onAdd = function (map) {
@@ -347,7 +359,8 @@ RenderRadar();
 		  '<button style="margin-bottom:4px;" onclick="$(\'.splash\').show();">Instructions</button><br />'+
 		  '<div>Score: <span id="Score"></span></div>'+
 	  '<input type=checkbox id=cheatcheck onchange="CalcCheats(this)" /><label for=cheatcheck>CHEATS</label>'
-	  + '<br/><input type=checkbox id=compasscheck onchange="CalcCompassDisp(this)" checked /><label for=compasscheck>Compass</label>';
+		+ '<br/><input type=checkbox id=compasscheck onchange="CalcCompassDisp(this)" checked /><label for=compasscheck>Compass</label>'
+		 + '<br/><input type=checkbox id=minimapcheck onchange="CalcMinimapDisp(this)" /><label for=minimapcheck>Minimap</label>';
 		  this._div.class = 'scorebox';
 		  this.update();
 		  
@@ -360,13 +373,28 @@ RenderRadar();
        compass_control.onAdd = function (map) {
 		  this._div = L.DomUtil.create('div', 'compass_info'); // create a div with a class "info"
 		  this._div.innerHTML = 
+		  '<canvas id="minimap" width="413" height="537" style="display:none"></canvas>';
+//		  this._div.class = 'scorebox';
+//		  this.update();
+		  
+		  return this._div;
+	  };
+		compass_control.addTo(map);
+
+			  var minimap_control = L.control({position:'topleft'});
+     
+
+       minimap_control.onAdd = function (map) {
+		  this._div = L.DomUtil.create('div', 'minimap_info'); // create a div with a class "info"
+		  this._div.innerHTML = 
 		  '<canvas id="compass" width="200" height="200"></canvas>';
 //		  this._div.class = 'scorebox';
 //		  this.update();
 		  
 		  return this._div;
 	  };
-	  compass_control.addTo(map);
+	  minimap_control.addTo(map);
+
 
       // method that we will use to update the control based on feature properties passed
       info.update = function (props) {
