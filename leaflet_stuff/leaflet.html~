@@ -10,7 +10,6 @@
 
   </head>
   <body>
-     
     <div id="map" style="width: 1900px; height: 900px"></div>
 
     <script src="historic_places.geojson" type="text/javascript"></script>
@@ -19,16 +18,12 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src="../maplogic.js" type="text/javascript"></script>
 	<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
 	<script src="leaflet-knn.min.js"></script>
 
-	<script src='compass.js'></script>
-	<img src="duck_front.gif" id=player_image />
-	 <script src="shp.js"></script>
-        <script src="catiline.js"></script>
-        <script src="leaflet.shpfile.js"></script>
+		
+	  <img src="duck_front.gif" id=player_image />
     <style>
 	.mute{
 			position:fixed;
@@ -42,10 +37,8 @@
     height: 32px;
     width: 32px;
     top:calc(50% - 32px/2); /* height divided by 2*/
-	left:calc(50% - 32px/2); /* width divided by 2*/
-	zindex = -999;
-	}
-
+    left:calc(50% - 32px/2); /* width divided by 2*/
+}
 		.splash {
 			position: absolute;
 			top: 50%;
@@ -65,27 +58,6 @@
 				-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 		}
-.compass_infos
-      {
-      /*padding: 6px 8px;
-      font: 14px/16px Arial, Helvetica, sans-serif;
-      background: white;
-      background: rgba(255,255,255,0.8);
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      border-radius: 5px;*/
-	  
-			background-color:#fffff0;
-			padding: 6px 8px;
-			cursor:default;
-			
-			border-radius: 4px;
-			
-			/* paper curl */
-			-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
-			-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
-      }
-
 	
       .info
       {
@@ -148,11 +120,8 @@
       {
       $('#Score').text(FoundShips.length+" of "+Ships.features.length);
       }
-		var FoundShips=[];
-		 
-	  
-		var map = L.map('map').setView([  -35.11717100000, 137.49110200000], 17);
-		map.on('move', function(e){RenderRadar()});
+      var FoundShips=[];
+      var map = L.map('map').setView([  -35.11717100000, 137.49110200000], 17);
       map.options.minZoom=17;
       
 
@@ -255,7 +224,7 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 
       var TreasureIcon1 = L.icon({
       iconUrl: 'shipwreck01.gif',
-      iconSize: [32, 32],
+      iconSize: [32, 37],
       iconAnchor: [16, 37],
       popupAnchor: [0, -28]
       });
@@ -283,13 +252,6 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
 
       var baseballIcon = L.icon({
       iconUrl: 'baseball.png',
-      iconSize: [32, 37],
-      iconAnchor: [16, 37],
-      popupAnchor: [0, -28]
-	  });
-
-	    var flagIcon = L.icon({
-      iconUrl: 'flag.gif',
       iconSize: [32, 37],
       iconAnchor: [16, 37],
       popupAnchor: [0, -28]
@@ -323,20 +285,12 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       
       function foundFeature(e)
       {
-		  if($.inArray(this,FoundShips)!=-1)
+		  if($.inArray(e.target._leaflet_id,FoundShips)!=-1)
 		  {
 		  }
 		  else
-	  {
-	 
-	  FoundShips.push(this);
-	  
-	  	   ShipsLayer.removeLayer(this);
-	  this.setIcon(flagIcon);
-	  
-	  this.addTo(map);
-	  this.openPopup();
-RenderRadar();
+		  {
+			FoundShips.push(e.target._leaflet_id);
 		  }
 		  UpdateScore();
       }
@@ -413,18 +367,6 @@ RenderRadar();
 			map.setZoom(map.options.minZoom);
 			$(".leaflet-control-zoom").hide();
 		  }
-	  }
-
-	  function CalcCompassDisp(element)
-      {
-	  if(element.checked)
-	  {
-	  $('#compass').show();
-	  }
-	  else
-	  {
-	  	  $('#compass').hide();
-	  }
       }
 
       info.onAdd = function (map) {
@@ -432,27 +374,12 @@ RenderRadar();
 		  this._div.innerHTML = 
 		  '<button style="margin-bottom:4px;" onclick="$(\'.splash\').show();">Instructions</button><br />'+
 		  '<div>Score: <span id="Score"></span></div>'+
-	  '<input type=checkbox id=cheatcheck onchange="CalcCheats(this)" /><label for=cheatcheck>CHEATS</label>'
-	  + '<br/><input type=checkbox id=compasscheck onchange="CalcCompassDisp(this)" checked /><label for=compasscheck>Compass</label>';
+		  '<input type=checkbox id=cheatcheck onchange="CalcCheats(this)" /><label for=cheatcheck>CHEATS</label>';
 		  this._div.class = 'scorebox';
 		  this.update();
 		  
 		  return this._div;
-	  };
-
-	  var compass_control = L.control({position:'topleft'});
-     
-
-       compass_control.onAdd = function (map) {
-		  this._div = L.DomUtil.create('div', 'compass_info'); // create a div with a class "info"
-		  this._div.innerHTML = 
-		  '<canvas id="compass" width="200" height="200"></canvas>';
-//		  this._div.class = 'scorebox';
-//		  this.update();
-		  
-		  return this._div;
-	  };
-	  compass_control.addTo(map);
+      };
 
       // method that we will use to update the control based on feature properties passed
       info.update = function (props) {
@@ -469,49 +396,32 @@ RenderRadar();
 		$("#map").width($(window).width()-20).height($(window).height()-20);
 	  map.invalidateSize();
 	 
-	  }
+      }
+      ResizeWindow();
 
-	  function flappyduck()
-	  {
-	  $('#player_image').attr('src','duck_flap_front.gif');
-	  }
 
-	  function unflappyduck()
-	  {
-	  $('#player_image').attr('src','duck_front.gif');
-	  }
-     
-	  var shpfile = new L.Shapefile('SA_Polygon.zip',{onEachFeature:function(feature, layer) {
-    	if (feature.properties) {
-			layer.bindPopup(Object.keys(feature.properties).map(function(k){
-				return k + ": " + feature.properties[k] ;
-			}).join("<br />"),{maxHeight:200});
-    	}
-	  }});
-	  shpfile.on('mouseover',function(e){flappyduck()});
-	  shpfile.on('mouseout',function(e){unflappyduck()});
-         shpfile.addTo(map);
-
-	   ResizeWindow();
       UpdateScore();
-	
+
 	  function RenderRadar()
 	  {
-	  var centr = map.getCenter();
-	  var nextship=leafletKnn(ShipsLayer).nearest(centr,1, 50000);
-	  if(nextship.length>0)
-	  {
-	  degrees= radarAngle( nextship[0].lon ,-nextship[0].lat,
-	  map.getCenter().lng ,-map.getCenter().lat)-90;
-	  }
-
+	  var nextship=leafletKnn(ShipsLayer).nearest(map.getCenter(),1, 5000);
+	  var dirlat = nextship[0].lat - map.getCenter().lat;
+	  var dirlan = nextship[0].lon - map.getCenter().lng;
+	  var len = Math.sqrt(dirlat*dirlat+dirlan*dirlan);
+	  dirlat /= len;
+	  dirlan /= len;
+	  dirlat *= 0.001;
+	  dirlan *= 0.001;
+	  var cntr=  map.getCenter();
+	  var arrowpoint = new L.LatLng(cntr.lat+ dirlat, cntr.lng+dirlan);
+	  
+	  
+	  var latlngs = [arrowpoint,map.getCenter()];
+	  var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
 	  };
 	  RenderRadar();
-	  init_compass();
-
-
+      
     </script>
-   
 	<div class="splash" onclick="$('.splash').hide();">
 		Ahoy matey,<br /><div style="height:8px;"></div>
 		It's Captain Chubberknuckles here. I have a crackerjack quest for ye to perform:<br /><div style="height:8px;"></div>
