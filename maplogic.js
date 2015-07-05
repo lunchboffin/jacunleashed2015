@@ -5,19 +5,25 @@ var mapInfo = {
 	width: 400,
 	height: 600,
 	botRightLat: -38.050037,
-	botRightLong: 140.802480
+	botRightLong: 140.802480,
+	topLeftLat: -26.019518,
+	topLeftLong: 128.981190
 }
 
-//returns the X coordinate for the given latitudinal value
-var mapTranslateX = function (inputLat) {
-	var ratio = inputLat / mapInfo.botRightLat;
-	return mapInfo.width * ratio;
+//returns the Y coordinate for the given latitudinal value
+var mapTranslateY = function (inputLat) {
+	var mapDiff = mapInfo.botRightLat - mapInfo.topLeftLat;
+	var relInputLat = inputLat - mapInfo.topLeftLat;
+	var ratio = relInputLat / mapDiff;
+	return Math.round(mapInfo.height * ratio);
 }
 
-//returns the Y coordinate for the given longitudinal value
-var mapTranslateY = function (inputLong) {
-	var ratio = inputLong / mapInfo.botRightLong;
-	return mapInfo.height * ratio;
+//returns the X coordinate for the given longitudinal value
+var mapTranslateX = function (inputLong) {
+	var mapDiff = mapInfo.botRightLong - mapInfo.topLeftLong;
+	var relInputLong = inputLong - mapInfo.topLeftLong;
+	var ratio = relInputLong / mapDiff;
+	return Math.round(mapInfo.width * ratio);
 }
 
 //returns the radar angle between two sets of coordinates
