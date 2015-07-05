@@ -2,12 +2,12 @@
 
 //info for the map file
 var mapInfo = {
-	width: 400,
-	height: 600,
-	botRightLat: -38.050037,
-	botRightLong: 140.802480,
-	topLeftLat: -26.019518,
-	topLeftLong: 128.981190
+	width: 413,
+	height: 537,
+	botRightLat: -40.930066711,
+	botRightLong: 141.215518787,
+	topLeftLat: -24.563376339,
+	topLeftLong: 128.619463671
 }
 
 //returns the Y coordinate for the given latitudinal value
