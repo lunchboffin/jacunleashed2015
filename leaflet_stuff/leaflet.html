@@ -168,7 +168,6 @@
 	  });
 	  PirateMapLayers.addTo(map);
 
-
       var TreasureIcon1 = L.icon({
       iconUrl: 'shipwreck01.gif',
       iconSize: [32, 32],
@@ -398,10 +397,17 @@ RenderRadar();
 
 	   var LandMassLayer = L.geoJson(LandMass, {
 
-      pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {icon: baseballIcon});
-      },
+		  pointToLayer: function (feature, latlng) {
+		  return L.marker(latlng, {icon: baseballIcon});
+		  },
 
+
+		  style: {
+			"color": "rgba(54, 25, 25, 0)",
+			"weight": 5,
+			"opacity": 0	
+			},
+		  
       onEachFeature: onHistoricFeature
       }).on('mouseover',function(e){flappyduck()}).on('mouseout',function(e){unflappyduck()}).addTo(map);
      
