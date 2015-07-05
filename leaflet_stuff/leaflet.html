@@ -283,7 +283,7 @@ var Stamen_TonerHybrid = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/t
       });
 
       var baseballIcon = L.icon({
-      iconUrl: 'baseball.png',
+      iconUrl: 'historic_place.png',
       iconSize: [32, 37],
       iconAnchor: [16, 37],
       popupAnchor: [0, -28]
@@ -347,8 +347,7 @@ RenderRadar();
 		"<h1>"+feature.properties.WRECKNAME+"</h1>"+
 		"<p>Rigging: "+feature.properties.RIGDESC+", Hull: "+feature.properties.HULLDESC+
 		"<br/>"+
-		"Lost at "+feature.properties.LOSSLOCATI+" on "+feature.properties.LOSSDATE+" cause: "+feature.properties.LOSSCAUSE+"</p>"+
-		"<a href='"+feature.properties.MORE_INFORMATION+"' target=_blank>More Info</a>";
+		"Lost at "+feature.properties.LOSSLOCATI+" on "+feature.properties.LOSSDATE+" cause: "+feature.properties.LOSSCAUSE+"</p>";
 
       if (feature.properties && feature.properties.popupContent) {
 		popupContent += feature.properties.popupContent;
