@@ -29,6 +29,7 @@
 	 <script src="shp.js"></script>
         <script src="catiline.js"></script>
         <script src="leaflet.shpfile.js"></script>
+	        <script src="SA_Boundary.json"></script>
     <style>
 	.mute{
 			position:fixed;
@@ -480,17 +481,18 @@ RenderRadar();
 	  {
 	  $('#player_image').attr('src','duck_front.gif');
 	  }
+
+	   var LandMassLayer = L.geoJson(LandMass, {
+
+      pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {icon: baseballIcon});
+      },
+
+      onEachFeature: onHistoricFeature
+      }).on('mouseover',function(e){flappyduck()}).on('mouseout',function(e){unflappyduck()}).addTo(map);
      
-	  var shpfile = new L.Shapefile('SA_Polygon.zip',{onEachFeature:function(feature, layer) {
-    	if (feature.properties) {
-			layer.bindPopup(Object.keys(feature.properties).map(function(k){
-				return k + ": " + feature.properties[k] ;
-			}).join("<br />"),{maxHeight:200});
-    	}
-	  }});
-	  shpfile.on('mouseover',function(e){flappyduck()});
-	  shpfile.on('mouseout',function(e){unflappyduck()});
-         shpfile.addTo(map);
+
+
 
 	   ResizeWindow();
       UpdateScore();
