@@ -12026,8 +12026,7 @@ var Ships = {
     "ISPROTECTE":"Y",
     "JURISDICTI":"State",
     "REGION":"Gulf St. Vincent",
-    "PUBLIC_ACC":"General Access",
-    Image:"https://farm6.staticflickr.com/5291/5458469022_7f249cd980_b.jpg"
+    "PUBLIC_ACC":"General Access"
     }
   },
   {
